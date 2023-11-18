@@ -18,6 +18,9 @@
 
   "environment": "*",
   "entrypoints": {
+    "stationapi:event_bus": [
+      "me.volosii.surv.Surv"
+    ]
 
   },
 
