@@ -5,6 +5,7 @@ import me.volosii.surv.block.FrozenBushBlock;
 import me.volosii.surv.world.feature.SnowPlantFeature;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
+import net.minecraft.block.Material;
 import net.minecraft.class_231;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
@@ -22,6 +23,8 @@ public class Surv {
     @Entrypoint.Namespace
     Namespace namespace;
     Block woodGlass;
+
+    Block megaWoodGlass;
     Block whiteFlower;
     Block purpleFlower;
     Block frozenBush;
@@ -29,7 +32,8 @@ public class Surv {
     Block purpleFlowerShoot;
     @EventListener
     void registerBlock(BlockRegistryEvent event) {
-        woodGlass = new TemplateGlassBlock(namespace.id("wood_glass"), 0);
+        woodGlass = new TemplateGlassBlock(namespace.id("wood_glass"), 0, Material.SAND,false).setHardness(0.4f);
+        megaWoodGlass = new TemplateGlassBlock(namespace.id("mega_wood_glass"), 0, Material.SAND,false).setHardness(0.4f);
         whiteFlower = new TemplatePlantBlock(namespace.id("white_flower"), 0);
         whiteFlowerShoot = new FlowerShootBlock(namespace.id("white_flower_shoot"), whiteFlower);
         purpleFlower = new TemplatePlantBlock(namespace.id("purple_flower"), 0);
@@ -62,6 +66,7 @@ public class Surv {
     @EventListener
     void registerTexture(TextureRegisterEvent event) {
         woodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/woodglass")).index;
+        megaWoodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/megawoodglass")).index;
         whiteFlower.textureId = Atlases.getTerrain().addTexture(namespace.id("block/whiteflower")).index;
         whiteFlower.asItem().method_458(whiteFlower.textureId);
         purpleFlower.textureId = Atlases.getTerrain().addTexture(namespace.id("block/purpleflower")).index;
@@ -77,6 +82,8 @@ public class Surv {
     @EventListener
     void registerRecipe(RecipeRegisterEvent event) {
         if(event.recipeId == RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS.type()) {
+            CraftingRegistry.addShapelessRecipe(new ItemStack(woodGlass,1),Block.GLASS);
+            CraftingRegistry.addShapelessRecipe(new ItemStack(megaWoodGlass,1),Block.DIRT);
             CraftingRegistry.addShapelessRecipe(new ItemStack(whiteFlowerShoot),whiteFlower);
             CraftingRegistry.addShapelessRecipe(new ItemStack(purpleFlowerShoot),purpleFlower);
         }
