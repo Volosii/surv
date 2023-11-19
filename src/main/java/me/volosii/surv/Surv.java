@@ -14,12 +14,14 @@ import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.event.world.gen.WorldGenEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
+import net.modificationstation.stationapi.api.template.block.TemplateGlassBlock;
 import net.modificationstation.stationapi.api.template.block.TemplatePlantBlock;
 import net.modificationstation.stationapi.api.util.Namespace;
 
 public class Surv {
     @Entrypoint.Namespace
     Namespace namespace;
+    Block woodGlass;
     Block whiteFlower;
     Block purpleFlower;
     Block frozenBush;
@@ -27,6 +29,7 @@ public class Surv {
     Block purpleFlowerShoot;
     @EventListener
     void registerBlock(BlockRegistryEvent event) {
+        woodGlass = new TemplateGlassBlock(namespace.id("wood_glass"), 0);
         whiteFlower = new TemplatePlantBlock(namespace.id("white_flower"), 0);
         whiteFlowerShoot = new FlowerShootBlock(namespace.id("white_flower_shoot"), whiteFlower);
         purpleFlower = new TemplatePlantBlock(namespace.id("purple_flower"), 0);
@@ -58,6 +61,7 @@ public class Surv {
     }
     @EventListener
     void registerTexture(TextureRegisterEvent event) {
+        woodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/woodglass")).index;
         whiteFlower.textureId = Atlases.getTerrain().addTexture(namespace.id("block/whiteflower")).index;
         whiteFlower.asItem().method_458(whiteFlower.textureId);
         purpleFlower.textureId = Atlases.getTerrain().addTexture(namespace.id("block/purpleflower")).index;
