@@ -4,21 +4,22 @@ import me.volosii.surv.block.FlowerShootBlock;
 import me.volosii.surv.block.FrozenBushBlock;
 import me.volosii.surv.world.feature.SnowPlantFeature;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.block.Block;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.Material;
-import net.minecraft.block.SlabBlock;
+import net.minecraft.block.*;
 import net.minecraft.class_231;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
+import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.world.gen.WorldGenEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.template.block.*;
+import net.modificationstation.stationapi.api.template.item.TemplateDoorItem;
 import net.modificationstation.stationapi.api.util.Namespace;
 import org.checkerframework.checker.units.qual.A;
 
@@ -26,6 +27,7 @@ public class Surv {
     @Entrypoint.Namespace
     Namespace namespace;
 
+    Block greenWheat;
     Block woodGlass;
     Block megaWoodGlass;
     Block whiteFlower;
@@ -35,8 +37,11 @@ public class Surv {
     Block whiteFlowerShoot;
     Block purpleFlowerShoot;
 
+
+
     @EventListener
     void registerBlock(BlockRegistryEvent event) {
+        greenWheat = new TemplatePlantBlock(namespace.id("green_wheat"), 0);
         saltBlock = new TemplateBlock(namespace.id("salt_block"), 0, Material.STONE).setHardness(0.4f);
         woodGlass = new TemplateGlassBlock(namespace.id("wood_glass"), 0, Material.SAND, false).setHardness(0.4f);
         megaWoodGlass = new TemplateGlassBlock(namespace.id("mega_wood_glass"), 0, Material.SAND, false).setHardness(0.4f);
@@ -51,6 +56,14 @@ public class Surv {
 
     @EventListener
     void generateFlower(WorldGenEvent.ChunkDecoration event) {
+
+        for (int i = 0; i < 3; i++) {
+            int x = event.x + event.random.nextInt(16) + 1;
+            int y = event.random.nextInt(event.world.getHeight()) + event.world.getBottomY();
+            int z = event.z + event.random.nextInt(16) + 1;
+            new class_231(greenWheat.id).method_1142(event.world, event.random, x, y, z);
+        }
+
         for (int i = 0; i < 3; i++) {
             int x = event.x + event.random.nextInt(16) + 8;
             int y = event.random.nextInt(event.world.getHeight()) + event.world.getBottomY();
@@ -69,12 +82,14 @@ public class Surv {
                 int y = event.random.nextInt(event.world.getHeight()) + event.world.getBottomY();
                 int z = event.z + event.random.nextInt(16) + 8;
                 new SnowPlantFeature(frozenBush.id).method_1142(event.world, event.random, x, y, z);
+
             }
         }
     }
 
     @EventListener
     void registerTexture(TextureRegisterEvent event) {
+        greenWheat.textureId = Atlases.getTerrain().addTexture(namespace.id("block/greenwheat")).index;
         saltBlock.textureId = Atlases.getTerrain().addTexture(namespace.id("block/saltblock")).index;
         woodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/woodglass")).index;
         megaWoodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/megawoodglass")).index;
@@ -96,8 +111,8 @@ public class Surv {
         if (event.recipeId == RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS.type()) {
             CraftingRegistry.addShapelessRecipe(new ItemStack(woodGlass, 1), Block.GLASS);
             CraftingRegistry.addShapelessRecipe(new ItemStack(megaWoodGlass, 1), Block.DIRT);
-            CraftingRegistry.addShapelessRecipe(new ItemStack(whiteFlowerShoot), whiteFlower);
-            CraftingRegistry.addShapelessRecipe(new ItemStack(purpleFlowerShoot), purpleFlower);
+            CraftingRegistry.addShapelessRecipe(new ItemStack(whiteFlowerShoot, 2), whiteFlower);
+            CraftingRegistry.addShapelessRecipe(new ItemStack(purpleFlowerShoot, 2), purpleFlower);
         }
     }
 }
