@@ -6,7 +6,7 @@ import me.volosii.surv.world.feature.SnowPlantFeature;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.*;
 import net.minecraft.class_231;
-import net.minecraft.item.BlockItem;
+import net.minecraft.item.DoorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
@@ -21,12 +21,12 @@ import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.template.block.*;
 import net.modificationstation.stationapi.api.template.item.TemplateDoorItem;
 import net.modificationstation.stationapi.api.util.Namespace;
-import org.checkerframework.checker.units.qual.A;
+
 
 public class Surv {
     @Entrypoint.Namespace
     Namespace namespace;
-
+    DoorBlock prisonDoor;
     Block greenWheat;
     Block woodGlass;
     Block megaWoodGlass;
@@ -38,10 +38,10 @@ public class Surv {
     Block purpleFlowerShoot;
 
 
-
     @EventListener
     void registerBlock(BlockRegistryEvent event) {
-        greenWheat = new TemplatePlantBlock(namespace.id("green_wheat"), 0);
+        prisonDoor = new TemplateDoorBlock(namespace.id("prison_door"), Material.WOOD);
+        greenWheat = new TemplatePlantBlock(namespace.id("green_wheat"),0);
         saltBlock = new TemplateBlock(namespace.id("salt_block"), 0, Material.STONE).setHardness(0.4f);
         woodGlass = new TemplateGlassBlock(namespace.id("wood_glass"), 0, Material.SAND, false).setHardness(0.4f);
         megaWoodGlass = new TemplateGlassBlock(namespace.id("mega_wood_glass"), 0, Material.SAND, false).setHardness(0.4f);
@@ -50,7 +50,9 @@ public class Surv {
         purpleFlower = new TemplatePlantBlock(namespace.id("purple_flower"), 0);
         purpleFlowerShoot = new FlowerShootBlock(namespace.id("purple_flower_shoot"), purpleFlower);
         frozenBush = new FrozenBushBlock(namespace.id("frozen_bush"), 0);
+
     }
+
 
 
 
@@ -89,6 +91,7 @@ public class Surv {
 
     @EventListener
     void registerTexture(TextureRegisterEvent event) {
+        prisonDoor.textureId = Atlases.getTerrain().addTexture(namespace.id("block/prisondoor")).index;
         greenWheat.textureId = Atlases.getTerrain().addTexture(namespace.id("block/greenwheat")).index;
         saltBlock.textureId = Atlases.getTerrain().addTexture(namespace.id("block/saltblock")).index;
         woodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/woodglass")).index;
@@ -106,13 +109,15 @@ public class Surv {
 
     }
 
+
+
     @EventListener
     void registerRecipe(RecipeRegisterEvent event) {
         if (event.recipeId == RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS.type()) {
-            CraftingRegistry.addShapelessRecipe(new ItemStack(woodGlass, 1), Block.GLASS);
-            CraftingRegistry.addShapelessRecipe(new ItemStack(megaWoodGlass, 1), Block.DIRT);
             CraftingRegistry.addShapelessRecipe(new ItemStack(whiteFlowerShoot, 2), whiteFlower);
             CraftingRegistry.addShapelessRecipe(new ItemStack(purpleFlowerShoot, 2), purpleFlower);
+            CraftingRegistry.addShapelessRecipe(new ItemStack(prisonDoor, 2), Item.COAL);
+
         }
     }
 }
