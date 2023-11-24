@@ -6,6 +6,7 @@ import me.volosii.surv.world.feature.SnowPlantFeature;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.*;
 import net.minecraft.class_231;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.DoorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.world.gen.WorldGenEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -27,6 +29,7 @@ public class Surv {
     @Entrypoint.Namespace
     Namespace namespace;
     DoorBlock prisonDoor;
+    Block slabBrick;
     Block greenWheat;
     Block woodGlass;
     Block megaWoodGlass;
@@ -40,6 +43,7 @@ public class Surv {
 
     @EventListener
     void registerBlock(BlockRegistryEvent event) {
+        slabBrick = new TemplateSlabBlock(namespace.id("slab_brick"), false);
         prisonDoor = new TemplateDoorBlock(namespace.id("prison_door"), Material.WOOD);
         greenWheat = new TemplatePlantBlock(namespace.id("green_wheat"),0);
         saltBlock = new TemplateBlock(namespace.id("salt_block"), 0, Material.STONE).setHardness(0.4f);
@@ -50,6 +54,7 @@ public class Surv {
         purpleFlower = new TemplatePlantBlock(namespace.id("purple_flower"), 0);
         purpleFlowerShoot = new FlowerShootBlock(namespace.id("purple_flower_shoot"), purpleFlower);
         frozenBush = new FrozenBushBlock(namespace.id("frozen_bush"), 0);
+
 
     }
 
@@ -91,7 +96,8 @@ public class Surv {
 
     @EventListener
     void registerTexture(TextureRegisterEvent event) {
-        prisonDoor.textureId = Atlases.getTerrain().addTexture(namespace.id("block/prisondoor")).index;
+        prisonDoor.textureId = Atlases.getTerrain().addTexture(namespace.id("block/brickslabe")).index;
+        slabBrick.textureId = Atlases.getTerrain().addTexture(namespace.id("block/prisondoor")).index;
         greenWheat.textureId = Atlases.getTerrain().addTexture(namespace.id("block/greenwheat")).index;
         saltBlock.textureId = Atlases.getTerrain().addTexture(namespace.id("block/saltblock")).index;
         woodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/woodglass")).index;
@@ -116,7 +122,7 @@ public class Surv {
         if (event.recipeId == RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS.type()) {
             CraftingRegistry.addShapelessRecipe(new ItemStack(whiteFlowerShoot, 2), whiteFlower);
             CraftingRegistry.addShapelessRecipe(new ItemStack(purpleFlowerShoot, 2), purpleFlower);
-            CraftingRegistry.addShapelessRecipe(new ItemStack(prisonDoor, 2), Item.COAL);
+            CraftingRegistry.addShapelessRecipe(new ItemStack(slabBrick, 3), Block.DIRT);
 
         }
     }
