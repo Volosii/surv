@@ -1,7 +1,9 @@
 package me.volosii.surv;
 
+import me.volosii.surv.block.CottonGreenBlock;
 import me.volosii.surv.block.FlowerShootBlock;
 import me.volosii.surv.block.FrozenBushBlock;
+import me.volosii.surv.block.RyeCustomBlock;
 import me.volosii.surv.world.feature.SnowPlantFeature;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.*;
@@ -22,15 +24,15 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.template.block.*;
 import net.modificationstation.stationapi.api.template.item.TemplateDoorItem;
+import net.modificationstation.stationapi.api.template.item.TemplateItem;
 import net.modificationstation.stationapi.api.util.Namespace;
 
 
 public class Surv {
     @Entrypoint.Namespace
     Namespace namespace;
-    DoorBlock prisonDoor;
-    Block slabBrick;
     Block greenWheat;
+    Block cottonGreenBig;
     Block woodGlass;
     Block megaWoodGlass;
     Block whiteFlower;
@@ -41,11 +43,11 @@ public class Surv {
     Block purpleFlowerShoot;
 
 
+
     @EventListener
     void registerBlock(BlockRegistryEvent event) {
-        slabBrick = new TemplateSlabBlock(namespace.id("slab_brick"), false);
-        prisonDoor = new TemplateDoorBlock(namespace.id("prison_door"), Material.WOOD);
-        greenWheat = new TemplatePlantBlock(namespace.id("green_wheat"),0);
+        cottonGreenBig = new CottonGreenBlock(namespace.id("cotton_green_big"), 0);
+        greenWheat = new RyeCustomBlock(namespace.id("green_wheat"),0);
         saltBlock = new TemplateBlock(namespace.id("salt_block"), 0, Material.STONE).setHardness(0.4f);
         woodGlass = new TemplateGlassBlock(namespace.id("wood_glass"), 0, Material.SAND, false).setHardness(0.4f);
         megaWoodGlass = new TemplateGlassBlock(namespace.id("mega_wood_glass"), 0, Material.SAND, false).setHardness(0.4f);
@@ -69,6 +71,13 @@ public class Surv {
             int y = event.random.nextInt(event.world.getHeight()) + event.world.getBottomY();
             int z = event.z + event.random.nextInt(16) + 1;
             new class_231(greenWheat.id).method_1142(event.world, event.random, x, y, z);
+
+        }
+        for (int i = 0; i < 3; i++) {
+            int x = event.x + event.random.nextInt(16) + 8;
+            int y = event.random.nextInt(event.world.getHeight()) + event.world.getBottomY();
+            int z = event.z + event.random.nextInt(16) + 8;
+            new class_231(cottonGreenBig.id).method_1142(event.world, event.random, x, y, z);
         }
 
         for (int i = 0; i < 3; i++) {
@@ -96,8 +105,7 @@ public class Surv {
 
     @EventListener
     void registerTexture(TextureRegisterEvent event) {
-        prisonDoor.textureId = Atlases.getTerrain().addTexture(namespace.id("block/brickslabe")).index;
-        slabBrick.textureId = Atlases.getTerrain().addTexture(namespace.id("block/prisondoor")).index;
+        cottonGreenBig.textureId = Atlases.getTerrain().addTexture(namespace.id("block/cottonplantgreenbig")).index;
         greenWheat.textureId = Atlases.getTerrain().addTexture(namespace.id("block/greenwheat")).index;
         saltBlock.textureId = Atlases.getTerrain().addTexture(namespace.id("block/saltblock")).index;
         woodGlass.textureId = Atlases.getTerrain().addTexture(namespace.id("block/woodglass")).index;
@@ -122,7 +130,7 @@ public class Surv {
         if (event.recipeId == RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS.type()) {
             CraftingRegistry.addShapelessRecipe(new ItemStack(whiteFlowerShoot, 2), whiteFlower);
             CraftingRegistry.addShapelessRecipe(new ItemStack(purpleFlowerShoot, 2), purpleFlower);
-            CraftingRegistry.addShapelessRecipe(new ItemStack(slabBrick, 3), Block.DIRT);
+
 
         }
     }
