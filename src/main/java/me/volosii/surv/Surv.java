@@ -1,9 +1,9 @@
 package me.volosii.surv;
 
-import me.volosii.surv.block.CottonGreenBlock;
-import me.volosii.surv.block.FlowerShootBlock;
-import me.volosii.surv.block.FrozenBushBlock;
-import me.volosii.surv.block.RyeCustomBlock;
+import me.volosii.surv.block1.CottonGreenBlock;
+import me.volosii.surv.block1.FlowerShootBlock;
+import me.volosii.surv.block1.FrozenBushBlock;
+import me.volosii.surv.block1.RyeCustomBlock;
 import me.volosii.surv.world.feature.SnowPlantFeature;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.*;
@@ -25,6 +25,7 @@ import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.template.block.*;
 import net.modificationstation.stationapi.api.template.item.TemplateDoorItem;
 import net.modificationstation.stationapi.api.template.item.TemplateItem;
+import net.modificationstation.stationapi.api.template.item.TemplateSeedsItem;
 import net.modificationstation.stationapi.api.util.Namespace;
 
 
@@ -41,6 +42,13 @@ public class Surv {
     Block frozenBush;
     Block whiteFlowerShoot;
     Block purpleFlowerShoot;
+
+    public static Item seedsCotton;
+
+    @EventListener
+    void registerItem(ItemRegistryEvent event) {
+        seedsCotton = new TemplateSeedsItem(namespace.id("cotton_seeds"), 0);
+    }
 
 
 
@@ -67,9 +75,9 @@ public class Surv {
     void generateFlower(WorldGenEvent.ChunkDecoration event) {
 
         for (int i = 0; i < 3; i++) {
-            int x = event.x + event.random.nextInt(16) + 1;
+            int x = event.x + event.random.nextInt(16) + 8;
             int y = event.random.nextInt(event.world.getHeight()) + event.world.getBottomY();
-            int z = event.z + event.random.nextInt(16) + 1;
+            int z = event.z + event.random.nextInt(16) + 8;
             new class_231(greenWheat.id).method_1142(event.world, event.random, x, y, z);
 
         }
@@ -119,6 +127,7 @@ public class Surv {
         int flowerSeedTexture = Atlases.getTerrain().addTexture(namespace.id("block/flowerseed")).index;
         whiteFlowerShoot.asItem().method_458(flowerSeedTexture);
         purpleFlowerShoot.asItem().method_458(flowerSeedTexture);
+        seedsCotton.method_458(Atlases.getGuiItems().addTexture(namespace.id("block/flowerseed")).index);
         frozenBush.asItem().method_458(frozenBush.textureId);
 
     }
